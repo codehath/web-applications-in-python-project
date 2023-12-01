@@ -1,27 +1,51 @@
 import os
-from flask import Flask, request
+from flask import Flask, make_response, request
 
 # Create a new Flask app
 app = Flask(__name__)
 
 # == Your Routes Here ==
+@app.route('/submit', methods = ['POST'])
+def submit():
+    name = request.form['name']
+    message = request.form['message']
+    return f'Thanks {name}, you sent this message: "{message}"'
 
-# == Example Code Below ==
+@app.route('/wave', methods = ['GET'])
+def wave():
+    name = request.args['name']
 
-# GET /emoji
-# Returns a emojiy face
-# Try it:
-#   ; curl http://127.0.0.1:5001/emoji
-@app.route('/emoji', methods=['GET'])
-def get_emoji():
-    return ":)"
+    return f"I am waving at {name}"
 
-# This imports some more example routes for you to see how they work
-# You can delete these lines if you don't need them.
-from example_routes import apply_example_routes
-apply_example_routes(app)
+@app.route('/count_vowels', methods = ['POST'])
+def count_vowels():
+    text = request.form['text']
 
-# == End Example Code ==
+    vowels = 0
+    for letter in text:
+        if letter in 'aeiou':
+            vowels += 1
+
+    return f'There are {vowels} vowels in "{text}"'
+
+
+
+@app.route('/sort-names', methods = ['POST'])
+def sort_names():
+    if "names" not in request.form:
+        response = make_response("Bad Request - Please provide names!")
+        response.status_code = 400
+        return response
+        # return "Please provide names!"
+    
+    
+    names = request.form['names']
+    all_names = names.split(',')
+    all_names.sort()
+    return ",".join(all_names)
+
+
+
 
 # These lines start the server if you run this file directly
 # They also start the server configured to use the test database
