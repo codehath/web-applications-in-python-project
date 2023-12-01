@@ -113,3 +113,65 @@ def test_post_sort_names_no_names(web_client):
     response = web_client.post('/sort-names')
     assert response.status_code == 400
     assert response.data.decode('utf-8') == "Bad Request - Please provide names!"
+
+
+# GET /names route tests
+"""
+GET /names?add=Eddie
+    Parameters:
+        add: Eddie
+    Expected response (200 OK):
+        "Julia, Alice, Karim, Eddie"
+"""
+def test_get_names_add_one_name(web_client):
+    response = web_client.get('/names?add=Eddie')
+    assert response.status_code == 200
+    assert response.data.decode('utf-8') == "Julia, Alice, Karim, Eddie"
+
+
+"""
+GET /names?add=Eddie,Leo
+    Parameters:
+        add: Eddie,Leo
+    Expected response (200 OK):
+        "Julia, Alice, Karim, Eddie, Leo"
+"""
+def test_get_names_add_two_names(web_client):
+    response = web_client.get('/names?add=Eddie,Leo')
+    assert response.status_code == 200
+    assert response.data.decode('utf-8') == "Julia, Alice, Karim, Eddie, Leo"
+
+"""
+GET /names?add=Eddie,Leo
+    Parameters:
+        add:
+    Expected response (200 OK):
+        "Julia, Alice, Karim, Eddie, Leo"
+"""
+def test_get_names_add_nothing(web_client):
+    response = web_client.get('/names?add=')
+    assert response.status_code == 200
+    assert response.data.decode('utf-8') == "Julia, Alice, Karim"
+
+"""
+GET /names?add=Eddie,Leo
+    Parameters:
+        add: Eddie,Leo
+    Expected response (200 OK):
+        "Alice, Eddie, Julia, Karim, Leo"
+"""
+def test_get_names_add_two_names_and_sort(web_client):
+    response = web_client.get('/names?add=Eddie,Leo')
+    assert response.status_code == 200
+    assert response.data.decode('utf-8') == "Alice, Eddie, Julia, Karim, Leo"
+
+
+"""
+GET /names
+    Expected response ((400 Bad Request)):
+        "Please provide a name!"
+"""
+def test_get_names_no_parameter(web_client):
+    response = web_client.post('/sort-names')
+    assert response.status_code == 400
+    assert response.data.decode('utf-8') == "Bad Request - Please provide names!"

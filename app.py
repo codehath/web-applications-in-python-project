@@ -46,6 +46,23 @@ def sort_names():
 
 
 
+@app.route('/names', methods = ['GET'])
+def add_names():
+    if "add" not in request.args:
+        response = make_response("Bad Request - Please provide a name!")
+        response.status_code = 400
+        return response
+
+    names = ["Julia", "Alice", "Karim"]
+    add = request.args['add']
+
+    if add != "":
+        names += add.split(',')
+    
+    names.sort()
+
+    return ", ".join(names)
+
 
 # These lines start the server if you run this file directly
 # They also start the server configured to use the test database
